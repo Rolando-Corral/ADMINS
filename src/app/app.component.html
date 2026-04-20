@@ -1,55 +1,74 @@
-<div class="container">
+<header class="d-flex justify-content-between align-items-center p-2 my-2 bg-secondary border rounded shadow">
 
-<header>
-  <h1>CRR01</h1>
-  <div class="muted">
-    <h4>Dólar</h4>
-    <div class="item"><span>venta: </span>
-      <p>ARS {{ valores[1] | number:'1.0-2' }}</p>
+  <h1 class="col text-light">CRR01</h1>
+
+  <div class="card text-muted p-2">
+    <h5>Dólar</h5>
+    <div class="flex-start">
+      <span>
+        <b>Venta:</b> ARS {{ valores[1] | number:'1.0-2' }}
+      </span>
+      <span>
+        <b>Compra:</b> ARS {{ valores[0] | number:'1.0-2' }}
+      </span>
     </div>
-    <div class="item"><span>compra: </span>
-      <p>ARS {{ valores[0] | number:'1.0-2' }}</p>
-    </div>
-    <div class="item"><span>Actualizado: </span>
-      <p>{{ fechaActualizacion | date:'dd/MM/yyyy' }}</p>
+    <!-- <div class="flex-start">
+      </div> -->
+    <div class="flex-start"><span>
+        actualizado:
+        {{ fechaActualizacion | date:'dd/MM/yyyy' }}
+
+      </span>
     </div>
   </div>
+
 </header>
 
-<section class="container">
-  <h2>Mis activos</h2>
+<section class="d-flex flex-wrap gap-4 border rounded shadow p-2 my-2">
+  <aside class="col-4">
+    <h2 class="text-center">Mis activos</h2>
 
-  <h3>Pesos (ARS)</h3>
-  <div>
-    <ul>
-      <li *ngFor="let a of assetsARS">
-        <p>{{ a.name }}</p> {{ a.amount | number:'1.2-2' }} ARS <span class="muted">({{ a.category }})</span>
-      </li>
-    </ul>
-  </div>
+   <div class="card p-2 my-2">
+     <div class="d-flex justify-content-between align-items-center px-2 gap-4">
+      <h3>Pesos (ARS) </h3> <span>cuentas remuneradas</span>
+    </div>
 
-  <h3>Dólares (USD)</h3>
-  <div *ngFor="let a of assetsUSD">
+    <div>
+      <ul class="px-2">
+        <li *ngFor="let a of assetsARS" class="list-group-item border-bottom mb-3">
+          <p>{{ a.name }} - AR$ {{ a.amount | number:'1.2-2' }} </p> 
+        </li>
+      </ul>
+    </div>
+   </div>
 
-    <ul>
-      <li>
-        <p>{{ a.name }}</p> {{ a.amount | number:'1.2-2' }} USD
-        <span class="muted">
-        ({{ a.amount * valores[1] | number:'1.0-0' }} ARS)
-      </span>
-      </li> 
-    </ul>
+    <div class="card p-2 my-2">
+      <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
+        <h3>Dólares (USD) </h3> <span>cuentas remuneradas</span>
+      </div>
+  
+      <div>
+        <ul class="px-2">
+          <li *ngFor="let a of assetsUSD" class="list-group-item border-bottom mb-3">
+            <p>{{ a.name }} - US$ {{ a.amount | number:'1.2-2' }} </p> 
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
 
+  <article class="col-7">
+    <h2>Gráficos</h2>
+    <p>Aquí se mostrarán gráficos relacionados con los activos y el tipo de cambio.</p>
+ 
+  </article>
 
-  </div>
 </section>
 
-<footer>
+<footer class="card p-2 my-2 shadow">
   <article>
     <h2>Capital total en pesos</h2>
     <p>ARS {{ calcularCapitalTotal() | number:'1.2-2' }} </p>
   </article>
 
 </footer>
-
-</div>
