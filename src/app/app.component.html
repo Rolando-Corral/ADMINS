@@ -1,74 +1,39 @@
-<header class="d-flex justify-content-between align-items-center p-2 my-2 bg-secondary border rounded shadow">
+<header class="d-flex justify-content-between align-items-center p-2 my-2 bg-dark border rounded shadow">
+  <h1 class="col text-light display-4">{{ title }}</h1>
 
-  <h1 class="col text-light">CRR01</h1>
+  <ul class="nav d-flex align-items-center gap-2">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" routerLink="/">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="updater">Updater</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <div class="card text-muted p-2">
+        <h5>Dólar</h5>
+        <div class="flex-start">
+          <span>
+            <b>Venta:</b> ARS {{ valores[1] | number:'1.0-2' }}
+          </span>
+          <span>
+            <b>Compra:</b> ARS {{ valores[0] | number:'1.0-2' }}
+          </span>
+        </div>
+        <div class="flex-start">
+      </div>
+        <div class="flex-start"><span>
+            actualizado:
+            {{ fechaActualizacion | date:'dd/MM/yyyy' }}
 
-  <div class="card text-muted p-2">
-    <h5>Dólar</h5>
-    <div class="flex-start">
-      <span>
-        <b>Venta:</b> ARS {{ valores[1] | number:'1.0-2' }}
-      </span>
-      <span>
-        <b>Compra:</b> ARS {{ valores[0] | number:'1.0-2' }}
-      </span>
-    </div>
-    <!-- <div class="flex-start">
-      </div> -->
-    <div class="flex-start"><span>
-        actualizado:
-        {{ fechaActualizacion | date:'dd/MM/yyyy' }}
-
-      </span>
-    </div>
-  </div>
+          </span>
+        </div>
+      </div>
+    </li>
+  </ul>
 
 </header>
 
-<section class="d-flex flex-wrap gap-4 border rounded shadow p-2 my-2">
-  <aside class="col-4">
-    <h2 class="text-center">Mis activos</h2>
-
-   <div class="card p-2 my-2">
-     <div class="d-flex justify-content-between align-items-center px-2 gap-4">
-      <h3>Pesos (ARS) </h3> <span>cuentas remuneradas</span>
-    </div>
-
-    <div>
-      <ul class="px-2">
-        <li *ngFor="let a of assetsARS" class="list-group-item border-bottom mb-3">
-          <p>{{ a.name }} - AR$ {{ a.amount | number:'1.2-2' }} </p> 
-        </li>
-      </ul>
-    </div>
-   </div>
-
-    <div class="card p-2 my-2">
-      <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
-        <h3>Dólares (USD) </h3> <span>cuentas remuneradas</span>
-      </div>
-  
-      <div>
-        <ul class="px-2">
-          <li *ngFor="let a of assetsUSD" class="list-group-item border-bottom mb-3">
-            <p>{{ a.name }} - US$ {{ a.amount | number:'1.2-2' }} </p> 
-          </li>
-        </ul>
-      </div>
-    </div>
-  </aside>
-
-  <article class="col-7">
-    <h2>Gráficos</h2>
-    <p>Aquí se mostrarán gráficos relacionados con los activos y el tipo de cambio.</p>
- 
-  </article>
-
-</section>
-
-<footer class="card p-2 my-2 shadow">
-  <article>
-    <h2>Capital total en pesos</h2>
-    <p>ARS {{ calcularCapitalTotal() | number:'1.2-2' }} </p>
-  </article>
-
-</footer>
+<router-outlet></router-outlet>

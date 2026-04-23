@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChartConfiguration, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 import { DollarServiceTsService } from './services/dollar/dollar.service.ts.service';
 import { AssetsService } from './services/assets/assets.service.ts.service';
 import { AssetModelTs } from './interfaces/asset.model.ts';
@@ -10,53 +12,38 @@ import { AssetModelTs } from './interfaces/asset.model.ts';
 })
 export class AppComponent implements OnInit {
 
-  title = 'CRR01';
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
+  title = 'ADMIN$';
   valores: number[] = [];
   fechaActualizacion: string = '';
-  // myAssetsList: AssetModelTs[] = [];
 
-  assetsARS: AssetModelTs[] = [];
-  assetsUSD: AssetModelTs[] = [];
+  // public barChartOptions: ChartConfiguration['options'] = {
+  //   responsive: true,
+  // };
 
-  constructor(private dollarService: DollarServiceTsService, private assetsService: AssetsService) { }
+  // public barChartType: ChartType = 'bar';
+
+  // public barChartData: ChartConfiguration['data'] = {
+  //   labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+  //   datasets: [
+  //     { data: [65, 59, 80, 81, 56, 55], label: 'Ingresos', backgroundColor: '#198754' },
+  //     { data: [28, 48, 40, 19, 86, 27], label: 'Gastos', backgroundColor: '#dc3545' }
+  //   ]
+  // };
+
+  constructor(private dollarService: DollarServiceTsService) { }
 
   ngOnInit() {
-    this.dollarData();
-    this.myAssets();
-    this.calcularCapitalTotal();
+    this.showDollarRate();
   }
+  showDollarRate() {
+    this.dollarService.getDollarRate().subscribe(data => {
+      this.valores = [data.compra, data.venta];
+      this.fechaActualizacion = data.fechaActualizacion;
+    });
 
 
-  dollarData() {
-    this.dollarService.getDollarRate()
-      .subscribe(
-        data => {
-          this.valores = [data.compra, data.venta];
-          this.fechaActualizacion = data.fechaActualizacion;
-        },
-        error => {
-          console.error('Error fetching dollar rate:', error);
-        }
-      );
-  }
-
-  myAssets() {
-    const assets = this.assetsService.getAssets();
-    this.assetsARS = assets.filter(asset => asset.currency === 'ARS');
-    this.assetsUSD = assets.filter(asset => asset.currency === 'USD');
-  }
-
-  // calcular capital total en pesos de los activos en dólares y sumar el capital total de los activos en pesos
-  calcularCapitalTotal(): number {
-    const totalARS = this.assetsARS.reduce((total, asset) => total + asset.amount, 0);
-    const totalUSD = this.assetsUSD.reduce((total, asset) => total + asset.amount, 0);
-    const totalUSDInARS = totalUSD * this.valores[0]; // Convertir dólares a pesos usando el valor de compra
-    return totalARS + totalUSDInARS;
   }
 
 }
-
-
-
-
-

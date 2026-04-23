@@ -1,0 +1,50 @@
+
+
+<section class="d-flex flex-wrap gap-4 border rounded shadow p-2 my-2">
+  <aside class="col-4">
+    <h2 class="text-center">Mis activos</h2>
+
+    <div class="card p-2 my-2">
+      <div class="d-flex justify-content-between align-items-center px-2 gap-4">
+        <h3>Pesos (ARS) </h3> <span>cuentas remuneradas</span>
+      </div>
+
+      <div>
+        <ul class="px-2">
+          <li *ngFor="let a of assetsARS" class="list-group-item border-bottom mb-3">
+            <p>{{ a.name }} - AR$ {{ a.amount | number:'1.2-2' }} </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card p-2 my-2">
+      <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
+        <h3>Dólares (USD) </h3> <span>cuentas remuneradas</span>
+      </div>
+
+      <div>
+        <ul class="px-2">
+          <li *ngFor="let a of assetsUSD" class="list-group-item border-bottom mb-3">
+            <p>{{ a.name }} - US$ {{ a.amount | number:'1.2-2' }} </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <article class="col-7">
+    <h2>Gráficos</h2>
+    <p>Aquí se mostrarán gráficos relacionados con los activos y el tipo de cambio.</p>
+
+  </article>
+
+</section>
+
+<footer class="card p-2 my-2 shadow">
+  <article>
+    <h2>Capital total en pesos</h2>
+    <p>ARS {{ calcularCapitalTotal() | number:'1.2-2' }} </p>
+  </article>
+
+</footer>
