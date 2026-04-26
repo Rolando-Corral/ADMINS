@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
 import { DollarServiceTsService } from 'src/app/services/dollar/dollar.service.ts.service';
@@ -10,20 +11,30 @@ import { DollarServiceTsService } from 'src/app/services/dollar/dollar.service.t
 })
 export class DashboardComponent implements OnInit {
 
-  valores: number[] = [];
-  fechaActualizacion: string = '';
-
-  assetsARS: AssetModelTs[] = [];
-  assetsUSD: AssetModelTs[] = [];
+  public valores: number[] = [];
+  public fechaActualizacion: string = '';
+  public assetsARS: AssetModelTs[] = [];
+  public assetsUSD: AssetModelTs[] = [];
+  public capitalTotal: number = 0;
 
   constructor(private dollarService: DollarServiceTsService, private assetsService: AssetsService) { }
 
   ngOnInit(): void {
     this.myAssets();
-    this.calcularCapitalTotal();
+    this.showDollarRate();
   }
 
-    
+   showDollarRate() {
+    this.dollarService.getDollarRate().subscribe(data => {
+      this.valores = [data.compra, data.venta];
+      this.fechaActualizacion = data.fechaActualizacion;
+      this.capitalTotal = this.calcularCapitalTotal();
+    });
+  }
+
+  getdollarRate(): Observable<{ compra: number; venta: number; fechaActualizacion: string; }> {
+    return this.dollarService.getDollarRate();
+  }
 
   myAssets() {
     const assets = this.assetsService.getAssets();
@@ -31,11 +42,11 @@ export class DashboardComponent implements OnInit {
     this.assetsUSD = assets.filter(asset => asset.currency === 'USD');
   }
 
-  // calcular capital total en pesos de los activos en dólares y sumar el capital total de los activos en pesos
   calcularCapitalTotal(): number {
     const totalARS = this.assetsARS.reduce((total, asset) => total + asset.amount, 0);
     const totalUSD = this.assetsUSD.reduce((total, asset) => total + asset.amount, 0);
-    const totalUSDInARS = totalUSD * this.valores[0]; // Convertir dólares a pesos usando el valor de compra
+    const totalUSDInARS = totalUSD * this.valores[0]; 
+    
     return totalARS + totalUSDInARS;
   }
 

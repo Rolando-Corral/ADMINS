@@ -5,15 +5,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DollarServiceTsService {
-
-  //   {
-//     "moneda": "USD",
-//     "casa": "oficial",
-//     "nombre": "Oficial",
-//     "compra": 1340,
-//     "venta": 1390,
-//     "fechaActualizacion": "2026-04-17T17:00:00.000Z"
-// }
   
   private baseUrl = 'https://dolarapi.com/v1/dolares/oficial';
 

@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartConfiguration, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { DollarServiceTsService } from './services/dollar/dollar.service.ts.service';
-import { AssetsService } from './services/assets/assets.service.ts.service';
-import { AssetModelTs } from './interfaces/asset.model.ts';
+
 
 @Component({
   selector: 'app-root',
@@ -42,8 +40,6 @@ export class AppComponent implements OnInit {
       this.valores = [data.compra, data.venta];
       this.fechaActualizacion = data.fechaActualizacion;
     });
-
-
   }
 
 }
