@@ -1,0 +1,5 @@
+// limitar la altura de la tarjeta de dolares al equivalente de 6 items
+.crdollars{
+    max-height: 370px;
+    overflow-y: scroll;
+}

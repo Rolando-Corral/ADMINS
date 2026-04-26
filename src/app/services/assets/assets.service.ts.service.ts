@@ -4,15 +4,16 @@ import { AssetModelTs } from '../../interfaces/asset.model.ts.js';
 @Injectable({ providedIn: 'root' })
 export class AssetsService {
   private assets: AssetModelTs[] = [
-    { id: '1', name: 'Galicia', currency: 'ARS', amount: 3455072.52, category: 'cuenta remunerada' },
-    { id: '2', name: 'Galicia', currency: 'USD', amount: 300.09, category: 'plazo fijo en USD' },
-    { id: '3', name: 'ARQ', currency: 'ARS', amount: 166505.83, category: 'cuenta remunerada' },
-    { id: '4', name: 'APPL', currency: 'USD', amount: 21.21, category: 'posición' },
-    { id: '5', name: 'MSFT', currency: 'USD', amount: 11.32, category: 'posición' },
-    { id: '6', name: 'AMZN', currency: 'USD', amount: 11.29, category: 'posición' },
-    { id: '7', name: 'SPY', currency: 'USD', amount: 7.35, category: 'posición' },
-    { id: '8', name: 'KO', currency: 'USD', amount: 4.64, category: 'posición' },
-    { id: '9', name: 'NDAQ', currency: 'USD', amount: 10.20, category: 'posición' },
+    { id: '1', countName: 'Galicia', currency: 'ARS', acquisitionCostUsd: 3455072.52, category: 'cuenta remunerada' },
+    { id: '2', countName: 'Galicia', currency: 'USD', acquisitionCostUsd: 300.09, category: 'plazo fijo en USD' },
+    { id: '3', countName: 'ARQ', currency: 'ARS', acquisitionCostUsd: 166505.83,currentValueUsd: 0, category: 'cuenta remunerada' },
+    { id: '4', countName: 'APPL', currency: 'USD', acquisitionCostUsd: 20.01,currentValueUsd: 21.28, category: 'posición' },
+    { id: '5', countName: 'MSFT', currency: 'USD', acquisitionCostUsd: 10,currentValueUsd: 11.36, category: 'posición' },
+    { id: '6', countName: 'AMZN', currency: 'USD', acquisitionCostUsd: 10,currentValueUsd: 11.89, category: 'posición' },
+    { id: '7', countName: 'SPY', currency: 'USD', acquisitionCostUsd: 17.91,currentValueUsd: 18.56, category: 'posición' },
+    { id: '8', countName: 'KO', currency: 'USD', acquisitionCostUsd: 4.74,currentValueUsd: 4.69, category: 'posición' },
+    { id: '9', countName: 'NDAQ', currency: 'USD', acquisitionCostUsd: 10.20,currentValueUsd: 0, category: 'posición' },
+    { id: '10', countName: 'NVDA', currency: 'USD', acquisitionCostUsd: 20,currentValueUsd: 20.78, category: 'posición' },
   ];
 
   getAssets():  AssetModelTs[] {

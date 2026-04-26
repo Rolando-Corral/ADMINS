@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   public assetsARS: AssetModelTs[] = [];
   public assetsUSD: AssetModelTs[] = [];
   public capitalTotal: number = 0;
+  public isAPosition: boolean = false;
 
   constructor(private dollarService: DollarServiceTsService, private assetsService: AssetsService) { }
 
@@ -43,12 +44,11 @@ export class DashboardComponent implements OnInit {
   }
 
   calcularCapitalTotal(): number {
-    const totalARS = this.assetsARS.reduce((total, asset) => total + asset.amount, 0);
-    const totalUSD = this.assetsUSD.reduce((total, asset) => total + asset.amount, 0);
+    const totalARS = this.assetsARS.reduce((total, asset) => total + asset.acquisitionCostUsd, 0);
+    const totalUSD = this.assetsUSD.reduce((total, asset) => total + asset.acquisitionCostUsd, 0);
     const totalUSDInARS = totalUSD * this.valores[0]; 
     
     return totalARS + totalUSDInARS;
   }
-
 
 }
