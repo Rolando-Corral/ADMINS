@@ -20,6 +20,9 @@
     <div class="card crdollars p-2 my-2">  <!-- crdollars = cuentas remuneradas en dolares -->
       <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
         <h3>Dólares (USD) </h3> <span>cuentas remuneradas</span>
+        <button class="btn btn-primary btn-sm" (click)="updateStockPrices()" [disabled]="isUpdatingPrices">
+          {{ isUpdatingPrices ? 'Actualizando...' : 'Actualizar Precios' }}
+        </button>
       </div>
 
       <div>
@@ -33,10 +36,9 @@
     </div>
   </aside>
 
-  <article class="col-6">
+  <article class="col">
     <h2>Gráficos</h2>
-    <p>Aquí se mostrarán gráficos relacionados con los activos y el tipo de cambio.</p>
-
+    <app-graphics></app-graphics>
   </article>
 
 </section>

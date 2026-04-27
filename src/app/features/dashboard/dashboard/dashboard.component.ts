@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
 import { DollarServiceTsService } from 'src/app/services/dollar/dollar.service.ts.service';
+import { StockService } from 'src/app/services/stockService/stock-service.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,8 +18,13 @@ export class DashboardComponent implements OnInit {
   public assetsUSD: AssetModelTs[] = [];
   public capitalTotal: number = 0;
   public isAPosition: boolean = false;
+  public isUpdatingPrices: boolean = false;
 
-  constructor(private dollarService: DollarServiceTsService, private assetsService: AssetsService) { }
+  constructor(
+    private dollarService: DollarServiceTsService, 
+    private assetsService: AssetsService,
+    private stockService: StockService
+  ) { }
 
   ngOnInit(): void {
     this.myAssets();
@@ -49,6 +55,42 @@ export class DashboardComponent implements OnInit {
     const totalUSDInARS = totalUSD * this.valores[0]; 
     
     return totalARS + totalUSDInARS;
+  }
+
+  updateStockPrices(): void {
+    const posiciones = this.assetsUSD.filter(a => a.category === 'posición');
+    
+    if (posiciones.length === 0) return;
+    
+    console.log(`Actualizando ${posiciones.length} posiciones:`, posiciones.map(p => p.countName));
+    
+    this.isUpdatingPrices = true;
+    let completed = 0;
+    
+    posiciones.forEach((asset, index) => {
+      setTimeout(() => {
+        console.log(`Consultando precio de ${asset.countName}...`);
+        this.stockService.getPrice(asset.countName).subscribe({
+          next: (price) => {
+            console.log(`✓ ${asset.countName}: $${price}`);
+            asset.currentValueUsd = price;
+            completed++;
+            if (completed === posiciones.length) {
+              this.isUpdatingPrices = false;
+              console.log('Actualización completada');
+            }
+          },
+          error: (err) => {
+            console.error(`✗ Error obteniendo precio de ${asset.countName}:`, err);
+            completed++;
+            if (completed === posiciones.length) {
+              this.isUpdatingPrices = false;
+              console.log('Actualización completada (con errores)');
+            }
+          }
+        });
+      }, index * 12000); // 12 segundos de delay entre cada consulta
+    });
   }
 
 }
