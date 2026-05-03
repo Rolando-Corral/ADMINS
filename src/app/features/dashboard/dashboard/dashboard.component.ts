@@ -43,10 +43,16 @@ export class DashboardComponent implements OnInit {
     return this.dollarService.getDollarRate();
   }
 
-  myAssets() {
-    const assets = this.assetsService.getAssets();
-    this.assetsARS = assets.filter(asset => asset.currency === 'ARS');
-    this.assetsUSD = assets.filter(asset => asset.currency === 'USD');
+  myAssets(): void {
+    this.assetsService.getAssetFromApi().subscribe({
+      next: (assets) => {
+        this.assetsARS = assets.filter(asset => asset.currency === 'ARS');
+        this.assetsUSD = assets.filter(asset => asset.currency === 'USD');
+      },
+      error: (err) => {
+        console.error('Error obteniendo assets:', err);
+      }
+    });
   }
 
   calcularCapitalTotal(): number {

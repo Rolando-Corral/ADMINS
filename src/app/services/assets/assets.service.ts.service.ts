@@ -1,22 +1,47 @@
 import { Injectable } from '@angular/core';
-import { AssetModelTs } from '../../interfaces/asset.model.ts.js';
+import { HttpClient } from '@angular/common/http';
+import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AssetsService {
-  private assets: AssetModelTs[] = [
-    { id: '1', countName: 'Galicia', currency: 'ARS', acquisitionCostUsd: 3455072.52, category: 'cuenta remunerada' },
-    { id: '2', countName: 'Galicia', currency: 'USD', acquisitionCostUsd: 300.09, category: 'plazo fijo en USD' },
-    { id: '3', countName: 'ARQ', currency: 'ARS', acquisitionCostUsd: 166775.85,currentValueUsd: 0, category: 'cuenta remunerada' },
-    { id: '4', countName: 'AAPL', currency: 'USD', acquisitionCostUsd: 20.01,currentValueUsd: 21.28, category: 'posición' },
-    { id: '5', countName: 'MSFT', currency: 'USD', acquisitionCostUsd: 10,currentValueUsd: 11.36, category: 'posición' },
-    { id: '6', countName: 'AMZN', currency: 'USD', acquisitionCostUsd: 10,currentValueUsd: 11.89, category: 'posición' },
-    { id: '7', countName: 'SPY', currency: 'USD', acquisitionCostUsd: 17.91,currentValueUsd: 18.56, category: 'posición' },
-    { id: '8', countName: 'KO', currency: 'USD', acquisitionCostUsd: 4.74,currentValueUsd: 4.69, category: 'posición' },
-    { id: '9', countName: 'NDAQ', currency: 'USD', acquisitionCostUsd: 10.20,currentValueUsd: 10.33, category: 'posición' },
-    { id: '10', countName: 'NVDA', currency: 'USD', acquisitionCostUsd: 20,currentValueUsd: 20.78, category: 'posición' },
-  ];
 
-  getAssets():  AssetModelTs[] {
+  private assetsAPIurl: string = 'http://localhost:3004/cuentas';
+
+  private assets: AssetModelTs[] = [];
+
+  constructor(private http: HttpClient) { }
+
+  // read: obtener todas las cuentas desde la API y guardarlas localmente
+  getAssetFromApi(): Observable<AssetModelTs[]> {
+    return this.http.get<AssetModelTs[]>(this.assetsAPIurl);
+  }
+
+  // obtener assets guardados localmente
+  getLocalAssets(): AssetModelTs[] {
     return this.assets;
   }
+
+  // Armar un CRUD
+
+  // create: agregar una cuenta
+  addAsset(asset: AssetModelTs): Observable<AssetModelTs> {
+    return this.http.post<AssetModelTs>(this.assetsAPIurl, asset);
+  }
+  
+  // read: obtener una sola cuenta
+  getAssetById(id: string): Observable<AssetModelTs> {
+    return this.http.get<AssetModelTs>(`${this.assetsAPIurl}/${id}`);
+  }
+
+  // update: actualizar una cuenta
+  updateAsset(id: string, asset: AssetModelTs): Observable<AssetModelTs> {
+    return this.http.put<AssetModelTs>(`${this.assetsAPIurl}/${id}`, asset);
+  }
+
+  // delete: borrar una cuenta
+  deleteAsset(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.assetsAPIurl}/${id}`);
+  }
+
 }

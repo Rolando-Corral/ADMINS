@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
+import { StockService } from 'src/app/services/stockService/stock-service.service';
+import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
 
 @Component({
   selector: 'app-graphics',
@@ -29,19 +31,69 @@ export class GraphicsComponent implements OnInit {
     datasets: []
   };
 
-  constructor(private assetsService: AssetsService) { }
+  public isLoading: boolean = false;
+
+  constructor(
+    private assetsService: AssetsService,
+    private stockService: StockService
+  ) { }
 
   ngOnInit(): void {
     this.loadChartData();
   }
 
   private loadChartData(): void {
-    const assets = this.assetsService.getAssets();
-    const posiciones = assets.filter(a => a.category === 'posición');
+    this.isLoading = true;
+    
+    this.assetsService.getAssetFromApi().subscribe({
+      next: (assets) => {
+        const posiciones = assets.filter(a => a.category === 'posición');
+        
+        if (posiciones.length === 0) {
+          this.isLoading = false;
+          return;
+        }
 
+        let completed = 0;
+        const currentPrices: number[] = new Array(posiciones.length).fill(0);
+
+        posiciones.forEach((asset, index) => {
+          setTimeout(() => {
+            this.stockService.getPrice(asset.countName).subscribe({
+              next: (price) => {
+                currentPrices[index] = price;
+                completed++;
+                
+                if (completed === posiciones.length) {
+                  this.updateChart(posiciones, currentPrices);
+                  this.isLoading = false;
+                }
+              },
+              error: (err) => {
+                console.error(`Error obteniendo precio de ${asset.countName}:`, err);
+                currentPrices[index] = asset.currentValueUsd || 0;
+                completed++;
+                
+                if (completed === posiciones.length) {
+                  this.updateChart(posiciones, currentPrices);
+                  this.isLoading = false;
+                }
+              }
+            });
+          }, index * 12000); // 12 segundos de delay entre cada consulta
+        });
+      },
+      error: (err) => {
+        console.error('Error cargando assets para gráficos:', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private updateChart(posiciones: AssetModelTs[], currentPrices: number[]): void {
     const labels = posiciones.map(a => a.countName);
-    const acquisitionData = posiciones.map(a => a.acquisitionCostUsd);
-    const currentData = posiciones.map(a => a.currentValueUsd || 0);
+    const acquisitionData = posiciones.map(a => (a.acquisitionCostUsd || 0) * (a.shares || 1));
+    const currentData = currentPrices.map((price, index) => price * (posiciones[index].shares || 1));
 
     this.barChartData = {
       labels: labels,
