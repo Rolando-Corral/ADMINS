@@ -92,7 +92,7 @@ export class GraphicsComponent implements OnInit {
 
   private updateChart(posiciones: AssetModelTs[], currentPrices: number[]): void {
     const labels = posiciones.map(a => a.countName);
-    const acquisitionData = posiciones.map(a => (a.acquisitionCostUsd || 0) * (a.shares || 1));
+    const acquisitionData = posiciones.map(a => a.acquisitionCostUsd || 0); // Ya es el total que pagaste
     const currentData = currentPrices.map((price, index) => price * (posiciones[index].shares || 1));
 
     this.barChartData = {

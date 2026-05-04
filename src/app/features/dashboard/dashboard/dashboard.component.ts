@@ -48,6 +48,19 @@ export class DashboardComponent implements OnInit {
       next: (assets) => {
         this.assetsARS = assets.filter(asset => asset.currency === 'ARS');
         this.assetsUSD = assets.filter(asset => asset.currency === 'USD');
+        
+        // Leer precios desde localStorage (cache de StockService)
+        this.assetsUSD.forEach(asset => {
+          const cached = localStorage.getItem(`stock_${asset.countName}`);
+          if (cached) {
+            try {
+              const cachedData = JSON.parse(cached);
+              asset.currentValueUsd = cachedData.price;
+            } catch (e) {
+              console.error('Error leyendo cache para', asset.countName, e);
+            }
+          }
+        });
       },
       error: (err) => {
         console.error('Error obteniendo assets:', err);
@@ -80,6 +93,12 @@ export class DashboardComponent implements OnInit {
           next: (price) => {
             console.log(`✓ ${asset.countName}: $${price}`);
             asset.currentValueUsd = price;
+            // Guardar en localStorage (cache de StockService)
+            const cached = {
+              price: price,
+              timestamp: Date.now()
+            };
+            localStorage.setItem(`stock_${asset.countName}`, JSON.stringify(cached));
             completed++;
             if (completed === posiciones.length) {
               this.isUpdatingPrices = false;
