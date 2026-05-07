@@ -30,6 +30,7 @@ export class SharesTableComponent implements OnInit {
       currency: ['USD', Validators.required],
       shares: [null, [Validators.required, Validators.min(0)]],
       acquisitionCostUsd: [0, [Validators.required, Validators.min(0)]],
+      currentValueUsd: [null], // Opcional - precio actual por acción
       category: ['', Validators.required]
     });
   }
@@ -76,6 +77,7 @@ export class SharesTableComponent implements OnInit {
         currency: asset.currency,
         shares: asset.shares || null,
         acquisitionCostUsd: asset.acquisitionCostUsd,
+        currentValueUsd: asset.currentValueUsd || null, // Opcional
         category: asset.category
       });
       this.showModal = true;
@@ -85,6 +87,16 @@ export class SharesTableComponent implements OnInit {
   saveEdit(): void {
     if (this.editForm.valid && this.selectedAssetId) {
       const updatedAsset: AssetModelTs = this.editForm.value;
+      
+      // Si se ingresó un valor actual, guardarlo en localStorage
+      const currentValue = this.editForm.get('currentValueUsd')?.value;
+      if (currentValue && updatedAsset.countName) {
+        const cached = {
+          price: currentValue,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(`stock_${updatedAsset.countName}`, JSON.stringify(cached));
+      }
       
       this.assetsService.updateAsset(this.selectedAssetId, updatedAsset).subscribe({
         next: (response) => {

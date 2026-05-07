@@ -102,6 +102,14 @@
             </div>
           </div>
 
+          <!-- Precio actual por acción (Opcional) -->
+          <div class="mb-3">
+            <label for="editCurrentValue" class="form-label">Precio actual por acción (USD) - Opcional</label>
+            <input type="number" id="editCurrentValue" formControlName="currentValueUsd" class="form-control"
+                   step="0.01" min="0">
+            <div class="form-text">Si ingresás este valor, la tabla calculará: precio × shares = valor de tu porcentaje</div>
+          </div>
+
           <!-- Categoría -->
           <div class="mb-3">
             <label for="editCategory" class="form-label">Categoría</label>

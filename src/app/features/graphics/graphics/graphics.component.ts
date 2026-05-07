@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
-import { StockService } from 'src/app/services/stockService/stock-service.service';
 import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
 
 @Component({
@@ -18,9 +17,7 @@ export class GraphicsComponent implements OnInit {
   public barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
-      legend: {
-        display: true
-      }
+      legend: { display: true }
     }
   };
 
@@ -33,10 +30,7 @@ export class GraphicsComponent implements OnInit {
 
   public isLoading: boolean = false;
 
-  constructor(
-    private assetsService: AssetsService,
-    private stockService: StockService
-  ) { }
+  constructor(private assetsService: AssetsService) { }
 
   ngOnInit(): void {
     this.loadChartData();
@@ -49,68 +43,47 @@ export class GraphicsComponent implements OnInit {
       next: (assets) => {
         const posiciones = assets.filter(a => a.category === 'posición');
         
-        if (posiciones.length === 0) {
-          this.isLoading = false;
-          return;
-        }
-
-        let completed = 0;
-        const currentPrices: number[] = new Array(posiciones.length).fill(0);
-
-        posiciones.forEach((asset, index) => {
-          setTimeout(() => {
-            this.stockService.getPrice(asset.countName).subscribe({
-              next: (price) => {
-                currentPrices[index] = price;
-                completed++;
-                
-                if (completed === posiciones.length) {
-                  this.updateChart(posiciones, currentPrices);
-                  this.isLoading = false;
-                }
-              },
-              error: (err) => {
-                console.error(`Error obteniendo precio de ${asset.countName}:`, err);
-                currentPrices[index] = asset.currentValueUsd || 0;
-                completed++;
-                
-                if (completed === posiciones.length) {
-                  this.updateChart(posiciones, currentPrices);
-                  this.isLoading = false;
-                }
-              }
-            });
-          }, index * 12000); // 12 segundos de delay entre cada consulta
+        // Leer precios del localStorage
+        posiciones.forEach(position => {
+          const cached = localStorage.getItem(`stock_${position.countName}`);
+          if (cached) {
+            try {
+              const cachedData = JSON.parse(cached);
+              position.currentValueUsd = cachedData.price;
+            } catch (e) {
+              console.error('Error leyendo cache para', position.countName, e);
+            }
+          }
         });
+
+        const labels = posiciones.map(a => a.countName);
+        const acquisitionData = posiciones.map(a => a.acquisitionCostUsd || 0);
+        const currentData = posiciones.map(a => (a.currentValueUsd || 0) * (a.shares || 1));
+
+        this.barChartData = {
+          labels: labels,
+          datasets: [
+            { 
+              data: acquisitionData, 
+              label: 'Precio de compra (USD)', 
+              backgroundColor: '#646665',
+              hoverBackgroundColor: '#353636'
+            },
+            { 
+              data: currentData, 
+              label: 'Valor actual (USD)', 
+              backgroundColor: '#0d6efd',
+              hoverBackgroundColor: '#24b8fc'
+            }
+          ]
+        };
+
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error cargando assets para gráficos:', err);
         this.isLoading = false;
       }
     });
-  }
-
-  private updateChart(posiciones: AssetModelTs[], currentPrices: number[]): void {
-    const labels = posiciones.map(a => a.countName);
-    const acquisitionData = posiciones.map(a => a.acquisitionCostUsd || 0); // Ya es el total que pagaste
-    const currentData = currentPrices.map((price, index) => price * (posiciones[index].shares || 1));
-
-    this.barChartData = {
-      labels: labels,
-      datasets: [
-        { 
-          data: acquisitionData, 
-          label: 'Precio de compra (USD)', 
-          backgroundColor: '#646665',
-          hoverBackgroundColor: '#353636'
-        },
-        { 
-          data: currentData, 
-          label: 'Precio actual (USD)', 
-          backgroundColor: '#0d6efd',
-          hoverBackgroundColor: '#24b8fc'
-        }
-      ]
-    };
   }
 }
