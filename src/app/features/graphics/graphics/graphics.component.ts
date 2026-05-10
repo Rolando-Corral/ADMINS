@@ -4,6 +4,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
 import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
+import { StockService } from 'src/app/services/stockService/stock-service.service';
 
 @Component({
   selector: 'app-graphics',
@@ -27,10 +28,12 @@ export class GraphicsComponent implements OnInit {
     labels: [],
     datasets: []
   };
-
+  
+  public assetsUSD: AssetModelTs[] = [];
+  public isUpdatingPrices: boolean = false;
   public isLoading: boolean = false;
 
-  constructor(private assetsService: AssetsService) { }
+  constructor(private assetsService: AssetsService, private stockService: StockService) { }
 
   ngOnInit(): void {
     this.loadChartData();
@@ -41,6 +44,7 @@ export class GraphicsComponent implements OnInit {
     
     this.assetsService.getAssetFromApi().subscribe({
       next: (assets) => {
+        this.assetsUSD = assets; // Guardar los assets
         const posiciones = assets.filter(a => a.category === 'posición');
         
         // Leer precios del localStorage
@@ -84,6 +88,50 @@ export class GraphicsComponent implements OnInit {
         console.error('Error cargando assets para gráficos:', err);
         this.isLoading = false;
       }
+    });
+  }
+
+  refreshChartData(){
+    const posiciones = this.assetsUSD.filter(a => a.category === 'posición');
+    
+    if (posiciones.length === 0) return;
+    
+    console.log(`Actualizando ${posiciones.length} posiciones:`, posiciones.map(p => p.countName));
+    
+    this.isUpdatingPrices = true;
+    let completed = 0;
+    
+    posiciones.forEach((asset, index) => {
+      setTimeout(() => {
+        console.log(`Consultando precio de ${asset.countName}...`);
+        this.stockService.getPrice(asset.countName).subscribe({
+          next: (price) => {
+            console.log(`✓ ${asset.countName}: $${price}`);
+            asset.currentValueUsd = price;
+            // Guardar en localStorage (cache de StockService)
+            const cached = {
+              price: price,
+              timestamp: Date.now()
+            };
+            localStorage.setItem(`stock_${asset.countName}`, JSON.stringify(cached));
+            completed++;
+            if (completed === posiciones.length) {
+              this.isUpdatingPrices = false;
+              console.log('Actualización completada');
+              this.loadChartData(); // Recargar el gráfico con los nuevos precios
+            }
+          },
+          error: (err) => {
+            console.error(`✗ Error obteniendo precio de ${asset.countName}:`, err);
+            completed++;
+            if (completed === posiciones.length) {
+              this.isUpdatingPrices = false;
+              console.log('Actualización completada (con errores)');
+              this.loadChartData(); // Recargar el gráfico con los nuevos precios
+            }
+          }
+        });
+      }, index * 12000); // 12 segundos de delay entre cada consulta
     });
   }
 }

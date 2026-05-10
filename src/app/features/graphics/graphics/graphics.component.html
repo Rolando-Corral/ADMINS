@@ -1,4 +1,10 @@
 <div class="card p-2">
+  
+  <button type="button" class="btn btn-refresh align-self-end" (click)="refreshChartData()" [disabled]="isUpdatingPrices">
+    <i class="bi bi-arrow-clockwise" title="Actualiza valores" *ngIf="!isUpdatingPrices"></i> 
+    <span *ngIf="isUpdatingPrices">Actualizando...</span>
+  </button>
+  
   <canvas baseChart
     [type]="barChartType"
     [data]="barChartData"
