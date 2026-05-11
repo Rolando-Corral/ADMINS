@@ -3,3 +3,15 @@
     max-height: 370px;
     overflow-y: scroll;
 }
+
+.chip{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: solid 1px rgb(104, 103, 103);
+    border-radius: 19px;
+    padding: 4px 10px 0px 10px;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
