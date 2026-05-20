@@ -1,4 +1,4 @@
-<header class="d-flex justify-content-between align-items-center p-2 my-2 bg-dark border rounded shadow">
+<!-- <header class="d-flex justify-content-between align-items-center p-2 my-2 bg-dark border rounded shadow">
   <h1 class="col text-light display-4">{{ title }}</h1>
 
   <ul class="nav d-flex align-items-center gap-2">
@@ -11,6 +11,7 @@
     <li class="nav-item">
       <a class="nav-link" routerLink="shares-table">Tabla de acciones</a>
     </li>
+    <li class="nav-item"><a class="nav-link" routerLink="piecharts">Grafico de pastel</a></li>
     <li class="nav-item">
       <div class="card text-muted p-2">
         <h5>Dólar</h5>
@@ -34,6 +35,6 @@
     </li>
   </ul>
 
-</header>
-
+</header> -->
+<shared-header [headerConfig]="headerConfig"></shared-header>
 <router-outlet></router-outlet>

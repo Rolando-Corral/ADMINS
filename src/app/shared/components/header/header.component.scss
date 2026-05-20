@@ -1,0 +1,36 @@
+/* Header */
+.header {
+    width: 100%;
+    background-color: #1C1C1E;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.header-left .logo {
+    color: #FFFFFF;
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.header-nav {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-link {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #00F0FF;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+}

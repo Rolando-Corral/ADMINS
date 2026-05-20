@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UpdaterComponent } from '../updater/updater/updater.component';
 import { SharesTableComponent } from '../shares-table/shares-table.component';
+import { PiechartsComponent } from '../graphics/piecharts/piecharts.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'shares-table',
         component: SharesTableComponent
+      },
+      {
+        path: 'piecharts',
+        component: PiechartsComponent
       },
       {
         path: '**',

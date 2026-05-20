@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { DollarServiceTsService } from './services/dollar/dollar.service.ts.service';
+import { HeaderConfig } from './shared/interfaces/header.interface';
 
 
 @Component({
@@ -12,9 +13,11 @@ export class AppComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  title = 'ADMIN$';
   valores: number[] = [];
   fechaActualizacion: string = '';
+  headerConfig: HeaderConfig = {
+    title: 'ADMIN$'
+  };
 
   constructor(private dollarService: DollarServiceTsService) { }
 
