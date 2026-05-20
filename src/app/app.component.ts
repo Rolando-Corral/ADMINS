@@ -13,9 +13,9 @@ export class AppComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  valores: number[] = [];
-  fechaActualizacion: string = '';
-  headerConfig: HeaderConfig = {
+  public  valores: number[] = [];
+  public  fechaActualizacion: string = '';
+  public headerConfig: HeaderConfig = {
     title: 'ADMIN$'
   };
 

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderConfig } from '../../interfaces/header.interface';
-import { SharedDollarBoxComponent } from '../shared-dollar-box/shared-dollar-box.component';
+import { SharedDollarBoxComponent } from '../dollar-box/shared-dollar-box.component';
 import { RouterModule } from '@angular/router';
 
 @Component({
