@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
-import { AssetModelTs } from 'src/app/core/interfaces/asset.model.ts';
+import { AssetsService } from 'src/app/core/services/assets/assets.service.ts.service';
+import { AssetModelTs } from 'src/app/core/interfaces/asset.model';
 
 @Component({
   selector: 'app-piecharts',

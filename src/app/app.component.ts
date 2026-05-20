@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { DollarServiceTsService } from './services/dollar/dollar.service.ts.service';
+import { DollarServiceTsService } from './core/services/dollar/dollar.service.ts.service';
 import { HeaderConfig } from './shared/interfaces/header.interface';
 
 

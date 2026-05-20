@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DollarServiceTsService } from 'src/app/services/dollar/dollar.service.ts.service';
+import { DollarServiceTsService } from 'src/app/core/services/dollar/dollar.service.ts.service';
 import { DolarPrice } from '../../interfaces/dolarPrice.interface';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AssetModelTs } from 'src/app/core/interfaces/asset.model.ts';
 import { Observable } from 'rxjs';
+import { AssetModelTs } from '../../interfaces/asset.model';
 
 @Injectable({ providedIn: 'root' })
 export class AssetsService {
