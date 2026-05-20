@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
+import { AssetModelTs } from 'src/app/core/interfaces/asset.model.ts';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
-import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
+import { AssetModelTs } from 'src/app/core/interfaces/asset.model.ts';
 import { StockService } from 'src/app/services/stockService/stock-service.service';
 
 @Component({

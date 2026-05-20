@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
-import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
+import { AssetModelTs } from 'src/app/core/interfaces/asset.model.ts';
 
 @Component({
   selector: 'app-shares-table',

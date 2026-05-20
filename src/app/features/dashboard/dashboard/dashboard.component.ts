@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AssetModelTs } from 'src/app/interfaces/asset.model.ts';
+import { AssetModelTs } from 'src/app/core/interfaces/asset.model.ts';
 import { AssetsService } from 'src/app/services/assets/assets.service.ts.service';
 import { DollarServiceTsService } from 'src/app/services/dollar/dollar.service.ts.service';
 import { StockService } from 'src/app/services/stockService/stock-service.service';
