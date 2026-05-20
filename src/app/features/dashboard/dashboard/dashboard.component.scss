@@ -1,17 +1,32 @@
-// limitar la altura de la tarjeta de dolares al equivalente de 6 items
-.crdollars{
-    max-height: 370px;
-    overflow-y: scroll;
+.dashboard-container {
+    background-color: #1C1C1E;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 16px;
 }
 
-.chip{
+.card {
+    background-color: #1C1C1E;
+    color: #e9e7e7;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.chip {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    border: solid 1px rgb(104, 103, 103);
+    border: 1px solid rgba(255, 255, 255, 0.24);
     border-radius: 19px;
     padding: 4px 10px 0px 10px;
     cursor: pointer;
     margin-bottom: 16px;
+}
+
+section{
+    height: 65vh;
 }
