@@ -1,10 +1,18 @@
 {
   "name": "crr01",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "CRR01 - Desktop financial manager",
+  "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:electron": "ng build --configuration electron",
+    "electron:dev": "set OPEN_DEVTOOLS=true&& npm run build:electron && electron .",
+    "electron:serve": "concurrently \"ng serve\" \"wait-on http://localhost:4200 && set ELECTRON_DEV=true&& set OPEN_DEVTOOLS=true&& electron .\"",
+    "electron:start": "npm run build:electron && electron .",
+    "electron:build": "npm run build:electron && electron-builder",
+    "electron:package": "npm run build:electron && electron-builder --win",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -32,12 +40,39 @@
     "@angular/compiler-cli": "^14.2.0",
     "@types/jasmine": "~4.0.0",
     "@types/node": "^16.18.126",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
     "jasmine-core": "~4.3.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.7.4"
+    "typescript": "~4.7.4",
+    "wait-on": "^9.0.10"
+  },
+  "build": {
+    "appId": "com.crr01.app",
+    "productName": "CRR01",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*.js"
+    ],
+    "extraResources": [],
+    "win": {
+      "target": "nsis",
+      "icon": "src/favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
