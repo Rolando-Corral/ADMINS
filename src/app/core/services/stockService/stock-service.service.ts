@@ -13,40 +13,43 @@ export class StockService {
 
   private apiKey = environment.alphaVantageApiKey;
   private baseUrl = 'https://www.alphavantage.co/query';
-  private cacheDuration = 30 * 60 * 1000; // 30 minutos en milisegundos
+  private cacheDuration = 30 * 60 * 1000;
 
   constructor(private http: HttpClient) {}
 
-  getPrice(symbol: string): Observable<number> {
+  getPrice(symbol: string): Observable<number | null> {
     const cached = this.getFromCache(symbol);
-    
+
     if (cached && !this.isExpired(cached.timestamp)) {
-      console.log(`Cache hit: ${symbol} = $${cached.price} (${Math.round((Date.now() - cached.timestamp)/1000)}s ago)`);
+      console.log(`Cache hit: ${symbol} = $${cached.price}`);
       return of(cached.price);
     }
 
-    console.log(`Cache miss: ${symbol} - consultando API...`);
     const url = `${this.baseUrl}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
-    
+
     return this.http.get<any>(url).pipe(
       map(response => {
-        console.log(`Respuesta API para ${symbol}:`, response);
-        
         if (response['Error Message']) {
-          throw new Error(response['Error Message']);
+          console.error(`[StockService] Error API para ${symbol}:`, response['Error Message']);
+          return null;
         }
-        
+
         if (response['Note']) {
-          throw new Error('Límite de API alcanzado: ' + response['Note']);
+          console.warn(`[StockService] Límite API para ${symbol}:`, response['Note']);
+          return null;
         }
-        
+
         const quote = response['Global Quote'];
-        if (quote && quote['05. price']) {
-          const price = Number(quote['05. price']);
+        const priceStr = quote?.['05. price'];
+
+        if (priceStr) {
+          const price = Number(priceStr);
           this.saveToCache(symbol, price);
           return price;
         }
-        throw new Error('Precio no encontrado en la respuesta');
+
+        console.warn(`[StockService] Sin precio disponible para ${symbol}`);
+        return null;
       })
     );
   }

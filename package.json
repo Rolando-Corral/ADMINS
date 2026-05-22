@@ -1,6 +1,6 @@
 {
   "name": "crr01",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CRR01 - Desktop financial manager",
   "main": "electron/main.js",
   "scripts": {
@@ -65,8 +65,7 @@
     ],
     "extraResources": [],
     "win": {
-      "target": "nsis",
-      "icon": "src/favicon.ico"
+      "target": "nsis"
     },
     "nsis": {
       "oneClick": false,

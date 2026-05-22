@@ -21,7 +21,14 @@ export class UpdaterComponent implements OnInit {
     private fb: FormBuilder,
     private assetsService: AssetsService
   ) {
-    this.assetForm = this.fb.group({
+    this.assetForm = this.createForm();
+  }
+
+  ngOnInit(): void {
+  }
+
+  private createForm(): FormGroup {
+    return this.fb.group({
       id: [this.generateUUID()],
       countName: ['', Validators.required],
       currency: ['USD', Validators.required],
@@ -29,9 +36,6 @@ export class UpdaterComponent implements OnInit {
       acquisitionCostUsd: [0, [Validators.required, Validators.min(0)]],
       category: ['', Validators.required]
     });
-  }
-
-  ngOnInit(): void {
   }
 
   private generateUUID(): string {
@@ -45,17 +49,14 @@ export class UpdaterComponent implements OnInit {
   onSubmit(): void {
     if (this.assetForm.valid) {
       const asset: AssetModelTs = this.assetForm.value;
-      console.log('Asset a guardar:', asset);
       
       this.assetsService.addAsset(asset).subscribe({
         next: (response) => {
           console.log('Asset guardado:', response);
-          alert('Asset guardado correctamente');
           this.resetForm();
         },
         error: (err) => {
           console.error('Error guardando asset:', err);
-          alert('Error guardando asset');
         }
       });
     } else {
@@ -64,13 +65,6 @@ export class UpdaterComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.assetForm.reset({
-      id: this.generateUUID(),
-      currency: 'USD',
-      shares: null,
-      acquisitionCostUsd: 0,
-      currentValueUsd: null,
-      category: ''
-    });
+    this.assetForm = this.createForm();
   }
 }
