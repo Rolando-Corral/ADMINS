@@ -1,69 +1,67 @@
+<div class="d-flex flex-column gap-3">
 
-<div class="dashboard-container">
-  <article>
+  <article class="dashboard-container">
     <h2>Capital total en pesos</h2>
     <p>ARS {{ calcularCapitalTotal() | number:'1.2-2' }} </p>
   </article>
 
-</div>
 
+  <section class="d-flex flex-wrap gap-4 dashboard-container">
+    <aside class="col-4">
+      <h2>Mis activos</h2>
 
-<section class="d-flex flex-wrap gap-4 dashboard-container">
-  <aside class="col-5">
-    <h2>Mis activos</h2>
+      <div class="card p-2 my-2">
 
-    <div class="card p-2 my-2">
-
-      <div class="d-flex justify-content-between align-items-center px-2 gap-4">
-        <h3>Pesos (ARS) </h3> <span>cuentas remuneradas</span>
-      </div>
-
-      <div>
-        <ul class="px-2">
-          <li *ngFor="let a of assetsARS" class="list-group-item border-bottom mb-3">
-            <p>{{ a.countName }} - AR$ {{ a.acquisitionCostUsd | number:'1.2-2' }} </p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="d-flex  justify-content-between align-items-center px-2 gap-4" *ngIf="fixedTerm">
-        <h3>Dólares (USD) </h3> <span>plazo fijo en USD</span>
-      </div>
-
-      <div>
-        <ul class="px-2">
-          <li *ngFor="let a of fixedTerm" class="list-group-item border-bottom mb-3">
-            <p>{{ a.countName }} - USD {{ a.acquisitionCostUsd | number:'1.2-2' }} </p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
-        <h3>Acciones (USD)</h3>
-      </div>
-
-      <div class="d-flex flex-wrap justify-content-start gap-2 align-items-center px-2 border-bottom mb-3">
-
-        <div class="chip" *ngFor="let a of allPositions">
-          <h6>{{ a.countName }}</h6>
+        <div class="d-flex justify-content-between align-items-center px-2 gap-4">
+          <h3>Pesos (ARS) </h3> <span>cuentas remuneradas</span>
         </div>
+
+        <div>
+          <ul class="px-2">
+            <li *ngFor="let a of assetsARS" class="list-group-item border-bottom mb-3">
+              <p>{{ a.countName }} - AR$ {{ a.acquisitionCostUsd | number:'1.2-2' }} </p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="d-flex  justify-content-between align-items-center px-2 gap-4" *ngIf="fixedTerm">
+          <h3>Dólares (USD) </h3> <span>plazo fijo en USD</span>
+        </div>
+
+        <div>
+          <ul class="px-2">
+            <li *ngFor="let a of fixedTerm" class="list-group-item border-bottom mb-3">
+              <p>{{ a.countName }} - USD {{ a.acquisitionCostUsd | number:'1.2-2' }} </p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
+          <h3>Acciones (USD)</h3>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-start gap-2 align-items-center px-2 border-bottom mb-3 activos">
+
+          <div class="chip" *ngFor="let a of allPositions">
+            <h6>{{ a.countName }}</h6>
+          </div>
+        </div>
+
+        <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
+          <h3>total de dolares en acciones</h3>
+          <h5 class="text-end">USD {{ calcularTotalInShares() | number:'1.2-2' }} </h5>
+        </div>
+
+
       </div>
 
-      <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
-        <h3>total de dolares en acciones</h3>
-        <h5 class="text-end">USD {{ calcularTotalInShares() | number:'1.2-2' }} </h5>  
-      </div>
 
-     
-    </div>
+    </aside>
 
+    <article class="col-7">
+      <h2>Gráficos</h2>
+      <app-graphics></app-graphics>
+    </article>
 
-  </aside>
-
-  <article class="col">
-    <h2>Gráficos</h2>
-    <app-graphics></app-graphics>
-  </article>
-
-</section>
-
+  </section>
+</div>
