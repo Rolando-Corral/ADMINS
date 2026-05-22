@@ -106,28 +106,16 @@ export class GraphicsComponent implements OnInit {
         console.log(`Consultando precio de ${asset.countName}...`);
         this.stockService.getPrice(asset.countName).subscribe({
           next: (price) => {
-            console.log(`✓ ${asset.countName}: $${price}`);
-            asset.currentValueUsd = price;
-            // Guardar en localStorage (cache de StockService)
-            const cached = {
-              price: price,
-              timestamp: Date.now()
-            };
-            localStorage.setItem(`stock_${asset.countName}`, JSON.stringify(cached));
-            completed++;
-            if (completed === posiciones.length) {
-              this.isUpdatingPrices = false;
-              console.log('Actualización completada');
-              this.loadChartData(); // Recargar el gráfico con los nuevos precios
+            if (price !== null) {
+              console.log(`✓ ${asset.countName}: $${price}`);
+              asset.currentValueUsd = price;
+            } else {
+              console.warn(`- ${asset.countName}: sin precio disponible`);
             }
-          },
-          error: (err) => {
-            console.error(`✗ Error obteniendo precio de ${asset.countName}:`, err);
             completed++;
             if (completed === posiciones.length) {
               this.isUpdatingPrices = false;
-              console.log('Actualización completada (con errores)');
-              this.loadChartData(); // Recargar el gráfico con los nuevos precios
+              this.loadChartData();
             }
           }
         });
