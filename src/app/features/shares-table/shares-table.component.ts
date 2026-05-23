@@ -9,6 +9,7 @@ import { AssetModelTs } from 'src/app/core/interfaces/asset.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './shares-table.component.html',
+  styleUrls: ['./shares-table.component.scss']
 })
 export class SharesTableComponent implements OnInit {
 
