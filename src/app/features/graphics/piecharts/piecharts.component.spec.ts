@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PiechartsComponent } from './piecharts.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PiechartsComponent', () => {
   let component: PiechartsComponent;
@@ -8,7 +9,7 @@ describe('PiechartsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PiechartsComponent ]
+      imports: [ HttpClientModule ]
     })
     .compileComponents();
 
