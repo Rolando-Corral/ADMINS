@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssetsService } from 'src/app/core/services/assets/assets.service.ts.service';
 import { AssetModelTs } from 'src/app/core/interfaces/asset.model';
+import { NotificationService } from 'src/app/core/services/notification/notification.service';
 
 @Component({
   selector: 'app-shares-table',
@@ -21,8 +22,10 @@ export class SharesTableComponent implements OnInit {
   editForm: FormGroup;
   selectedAssetId: string = '';
 
+
   constructor(
     private assetsService: AssetsService,
+    private notificationService: NotificationService,
     private fb: FormBuilder
   ) {
     this.editForm = this.fb.group({
@@ -33,6 +36,7 @@ export class SharesTableComponent implements OnInit {
       currentValueUsd: [null], // Opcional - precio actual por acción
       category: ['', Validators.required]
     });
+
   }
 
   ngOnInit(): void {
@@ -49,6 +53,7 @@ export class SharesTableComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error cargando posiciones:', err);
+        this.notificationService.error('Ha ocurrido un error al cargar las posiciones');
         this.isLoading = false;
       }
     });
@@ -101,13 +106,15 @@ export class SharesTableComponent implements OnInit {
       this.assetsService.updateAsset(this.selectedAssetId, updatedAsset).subscribe({
         next: (response) => {
           console.log('Asset actualizado:', response);
-          alert('Asset actualizado correctamente');
+          // alert('Asset actualizado correctamente');
+          this.notificationService.success('Asset actualizado correctamente');
           this.closeModal();
           this.loadPositions();
         },
         error: (err) => {
           console.error('Error actualizando asset:', err);
-          alert('Error actualizando asset');
+          // alert('Error actualizando asset');
+          this.notificationService.error('Ha ocurrido un error al actualizar el asset');
         }
       });
     } else {
@@ -126,15 +133,18 @@ export class SharesTableComponent implements OnInit {
     });
   }
 
-  deleteAsset(id: string): void {
-    if (confirm('¿Estás seguro de eliminar este asset?')) {
+  async deleteAsset(id: string): Promise<void> {
+    
+    if (await this.notificationService.confirm('¿Estás seguro de que deseas eliminar este asset?')) {
       this.assetsService.deleteAsset(id).subscribe({
         next: () => {
           console.log('Asset eliminado:', id);
+          this.notificationService.success('Asset eliminado correctamente');
           this.loadPositions();
         },
         error: (err) => {
           console.error('Error eliminando asset:', err);
+          this.notificationService.error('Ha ocurrido un error al eliminar el asset');
         }
       });
     }

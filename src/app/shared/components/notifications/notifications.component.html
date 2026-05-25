@@ -1,0 +1,37 @@
+<div
+  class="noti-container"
+  [ngClass]="['noti-' + config.type, isConfirm ? 'noti-confirm' : 'noti-toast']"
+  [attr.role]="isConfirm ? 'dialog' : 'alert'"
+  [attr.aria-modal]="isConfirm ? true : null">
+
+  <div class="noti-icon" *ngIf="config.icon">
+    <i class="bi" [ngClass]="config.icon"></i>
+  </div>
+
+  <div class="noti-content">
+    <div class="noti-title" *ngIf="config.title">
+      <h2>{{ config.title }}</h2>
+    </div>
+    <div class="noti-message">
+      <p>{{ config.message }}</p>
+    </div>
+
+    <div class="noti-actions" *ngIf="isConfirm">
+      <button type="button" class="btn btn-secondary noti-btn-cancel" (click)="onCancel()">
+        {{ config.cancelLabel }}
+      </button>
+      <button type="button" class="btn noti-btn-confirm" [ngClass]="'btn-' + confirmButtonClass" (click)="onConfirm()">
+        {{ config.confirmLabel }}
+      </button>
+    </div>
+  </div>
+
+  <div class="noti-close" *ngIf="config.close">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Cerrar"
+      (click)="onClose()">
+    </button>
+  </div>
+</div>
