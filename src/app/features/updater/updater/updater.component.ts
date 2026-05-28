@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssetsService } from 'src/app/core/services/assets/assets.service.ts.service';
 import { AssetModelTs } from 'src/app/core/interfaces/asset.model';
+import { NotificationService } from 'src/app/core/services/notification/notification.service';
 
 @Component({
   selector: 'app-updater',
@@ -19,7 +20,8 @@ export class UpdaterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private assetsService: AssetsService
+    private assetsService: AssetsService,
+    private notificationService: NotificationService
   ) {
     this.assetForm = this.createForm();
   }
@@ -53,10 +55,12 @@ export class UpdaterComponent implements OnInit {
       this.assetsService.addAsset(asset).subscribe({
         next: (response) => {
           console.log('Asset guardado:', response);
+          this.notificationService.success('Asset guardado correctamente');
           this.resetForm();
         },
         error: (err) => {
           console.error('Error guardando asset:', err);
+          this.notificationService.error('Ha ocurrido un error al guardar el asset');
         }
       });
     } else {

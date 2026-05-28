@@ -7,10 +7,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { NotificationsComponent } from './shared/components/notifications/notifications.component';
+import { NotificationContainerComponent } from './shared/components/notifications/notification-container.component';
 
 @NgModule({
   declarations: [
-    AppComponent,    
+    AppComponent,
+    NotificationsComponent,
+    NotificationContainerComponent,
   ],
   imports: [
     BrowserModule,

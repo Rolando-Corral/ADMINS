@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GraphicsComponent } from './graphics.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('GraphicsComponent', () => {
   let component: GraphicsComponent;
@@ -8,7 +9,7 @@ describe('GraphicsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ GraphicsComponent ]
+      imports: [ GraphicsComponent, HttpClientModule ]
     })
     .compileComponents();
 
