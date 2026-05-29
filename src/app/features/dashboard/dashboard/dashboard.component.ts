@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AssetModelTs } from 'src/app/core/interfaces/asset.model';
 import { AssetsService } from 'src/app/core/services/assets/assets.service.ts.service';
 import { DollarServiceTsService } from 'src/app/core/services/dollar/dollar.service.ts.service';
-import { StockService } from 'src/app/core/services/stockService/stock-service.service';
+import { NotificationService } from 'src/app/core/services/notification/notification.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,7 @@ export class DashboardComponent implements OnInit {
 
   public valores: number[] = [];
   public fechaActualizacion: string = '';
-  public assetsARS: AssetModelTs[] = [];
+  public remuneratedAccounts: AssetModelTs[] = [];
   public assetsUSD: AssetModelTs[] = [];
   public fixedTerm: AssetModelTs[] = [];
   public allPositions: AssetModelTs[] = [];
@@ -23,10 +24,25 @@ export class DashboardComponent implements OnInit {
   public isAPosition: boolean = false;
   public isUpdatingPrices: boolean = false;
 
+  showEditModal = false;
+  editForm: FormGroup;
+  selectedAssetId = '';
+  editModalTitle = '';
+  editBalanceLabel = 'Saldo (ARS)';
+
   constructor(
     private dollarService: DollarServiceTsService,
     private assetsService: AssetsService,
-  ) { }
+    private notificationService: NotificationService,
+    private fb: FormBuilder,
+  ) {
+    this.editForm = this.fb.group({
+      countName: ['', Validators.required],
+      currency: ['ARS', Validators.required],
+      acquisitionCostUsd: [0, [Validators.required, Validators.min(0)]],
+      category: ['cuenta remunerada', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.myAssets();
@@ -50,7 +66,7 @@ export class DashboardComponent implements OnInit {
   myAssets(): void {
     this.assetsService.getAssetFromApi().subscribe({
       next: (assets) => {
-        this.assetsARS = assets.filter(asset => asset.currency === 'ARS');
+        this.remuneratedAccounts = assets.filter(asset => asset.category === 'cuenta remunerada');
         this.assetsUSD = assets.filter(asset => asset.currency === 'USD');
 
         // Leer precios desde localStorage (cache de StockService)
@@ -99,7 +115,7 @@ export class DashboardComponent implements OnInit {
   }
 
   calcularCapitalTotal(): number {
-    const totalARS = this.assetsARS.reduce((total, asset) => total + asset.acquisitionCostUsd, 0);
+    const totalARS = this.remuneratedAccounts.reduce((total, asset) => total + asset.acquisitionCostUsd, 0);
     const totalUSD = this.assetsUSD.reduce((total, asset) => total + asset.acquisitionCostUsd, 0);
     const totalUSDInARS = totalUSD * this.valores[0];
 
@@ -112,5 +128,90 @@ export class DashboardComponent implements OnInit {
     return totalUSD.toFixed(2);
   }
 
+  editRemuneratedAccount(id: string): void {
+    this.openAssetEdit(
+      id,
+      this.remuneratedAccounts,
+      'No se encontró la cuenta remunerada',
+      'Editar cuenta remunerada',
+      'Saldo (ARS)',
+    );
+  }
+
+  editFixedTermAccount(id: string): void {
+    this.openAssetEdit(
+      id,
+      this.fixedTerm,
+      'No se encontró el plazo fijo',
+      'Editar plazo fijo en USD',
+      'Saldo (USD)',
+    );
+  }
+
+  private openAssetEdit(
+    id: string,
+    accounts: AssetModelTs[],
+    notFoundMessage: string,
+    modalTitle: string,
+    balanceLabel: string,
+  ): void {
+    const asset = accounts.find(account => account.id === id);
+
+    if (!asset) {
+      this.notificationService.error(notFoundMessage);
+      return;
+    }
+
+    this.editModalTitle = modalTitle;
+    this.editBalanceLabel = balanceLabel;
+    this.selectedAssetId = id;
+    this.editForm.patchValue({
+      countName: asset.countName,
+      currency: asset.currency,
+      acquisitionCostUsd: asset.acquisitionCostUsd,
+      category: asset.category,
+    });
+    this.showEditModal = true;
+  }
+
+  saveEditedAsset(): void {
+    if (!this.editForm.valid || !this.selectedAssetId) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    const updatedAsset: AssetModelTs = {
+      id: this.selectedAssetId,
+      ...this.editForm.value,
+    };
+
+    const successMessage = updatedAsset.category === 'plazo fijo en USD'
+      ? 'Plazo fijo actualizado correctamente'
+      : 'Cuenta remunerada actualizada correctamente';
+
+    this.assetsService.updateAsset(this.selectedAssetId, updatedAsset).subscribe({
+      next: () => {
+        this.notificationService.success(successMessage);
+        this.closeEditModal();
+        this.myAssets();
+        this.showOnlyDollars();
+        this.showDollarRate();
+      },
+      error: () => {
+        this.notificationService.error('Ha ocurrido un error al actualizar el activo');
+      },
+    });
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.selectedAssetId = '';
+    this.editModalTitle = '';
+    this.editForm.reset({
+      currency: 'ARS',
+      acquisitionCostUsd: 0,
+      category: 'cuenta remunerada',
+    });
+  }
 
 }

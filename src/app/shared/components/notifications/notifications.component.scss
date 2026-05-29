@@ -1,0 +1,148 @@
+.noti-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background-color: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color: #e9e7e7;
+}
+
+.noti-confirm {
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 320px;
+  max-width: 400px;
+  padding: 24px;
+
+  .noti-icon {
+    margin: 0 auto;
+    font-size: 2.5rem;
+  }
+
+  .noti-content {
+    width: 100%;
+  }
+}
+
+.noti-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.noti-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.noti-title h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #fff;
+}
+
+.noti-confirm .noti-title h2 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.noti-message p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #b8b8b8;
+  line-height: 1.4;
+}
+
+.noti-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.noti-btn-cancel {
+  background-color: #2c2c2e;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e9e7e7;
+
+  &:hover {
+    background-color: #3a3a3c;
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+}
+
+.noti-btn-confirm.btn-danger {
+  background-color: #ff3b30;
+  border-color: #ff3b30;
+
+  &:hover {
+    background-color: #e6352b;
+    border-color: #e6352b;
+  }
+}
+
+.noti-close {
+  margin-left: auto;
+
+  .btn-close {
+    filter: invert(1) grayscale(1);
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.noti-success {
+  border-left: 4px solid #34c759;
+
+  .noti-icon {
+    color: #34c759;
+  }
+}
+
+.noti-error {
+  border-left: 4px solid #ff3b30;
+
+  .noti-icon {
+    color: #ff3b30;
+  }
+}
+
+.noti-warning {
+  border-left: 4px solid #ff9f0a;
+
+  .noti-icon {
+    color: #ff9f0a;
+  }
+}
+
+.noti-info {
+  border-left: 4px solid #0a84ff;
+
+  .noti-icon {
+    color: #0a84ff;
+  }
+}
+
+.noti-confirm.noti-warning,
+.noti-confirm.noti-error {
+  border-left: none;
+  border-top: 3px solid;
+}
+
+.noti-confirm.noti-warning {
+  border-top-color: #ff9f0a;
+}
+
+.noti-confirm.noti-error {
+  border-top-color: #ff3b30;
+}

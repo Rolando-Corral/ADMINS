@@ -1,13 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AssetsServiceTsService } from './assets.service.ts.service';
+import { AssetsService } from './assets.service.ts.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AssetsServiceTsService', () => {
-  let service: AssetsServiceTsService;
+  let service: AssetsService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(AssetsServiceTsService);
+    TestBed.configureTestingModule({imports: [HttpClientModule]});
+    service = TestBed.inject(AssetsService);
+
   });
 
   it('should be created', () => {

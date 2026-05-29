@@ -18,22 +18,34 @@
 
         <div>
           <ul class="px-2">
-            <li *ngFor="let a of assetsARS" class="list-group-item border-bottom mb-3">
-              <p>{{ a.countName }} - AR$ {{ a.acquisitionCostUsd | number:'1.2-2' }} </p>
+            <li *ngFor="let a of remuneratedAccounts" class="list-group-item border-bottom mb-3">
+              <div class="d-flex justify-content-between align-items-center gap-2">
+                <p class="mb-0">{{ a.countName }} - AR$ {{ a.acquisitionCostUsd | number:'1.2-2' }}</p>
+                <button type="button" class="btn btn-sm btn-warning" (click)="editRemuneratedAccount(a.id)">
+                  Editar
+                </button>
+              </div>
             </li>
           </ul>
+          <p *ngIf="remuneratedAccounts.length === 0" class="px-2 text-muted mb-0">No hay cuentas remuneradas.</p>
         </div>
 
-        <div class="d-flex  justify-content-between align-items-center px-2 gap-4" *ngIf="fixedTerm">
+        <div class="d-flex justify-content-between align-items-center px-2 gap-4">
           <h3>Dólares (USD) </h3> <span>plazo fijo en USD</span>
         </div>
 
         <div>
           <ul class="px-2">
             <li *ngFor="let a of fixedTerm" class="list-group-item border-bottom mb-3">
-              <p>{{ a.countName }} - USD {{ a.acquisitionCostUsd | number:'1.2-2' }} </p>
+              <div class="d-flex justify-content-between align-items-center gap-2">
+                <p class="mb-0">{{ a.countName }} - USD {{ a.acquisitionCostUsd | number:'1.2-2' }}</p>
+                <button type="button" class="btn btn-sm btn-warning" (click)="editFixedTermAccount(a.id)">
+                  Editar
+                </button>
+              </div>
             </li>
           </ul>
+          <p *ngIf="fixedTerm.length === 0" class="px-2 text-muted mb-0">No hay plazos fijos en USD.</p>
         </div>
 
         <div class="d-flex  justify-content-between align-items-center px-2 gap-4">
@@ -65,3 +77,38 @@
 
   </section>
 </div>
+
+<div class="modal fade backdrop" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editModalTitle }}</h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <form [formGroup]="editForm" (ngSubmit)="saveEditedAsset()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="editCountName" class="form-label">Nombre</label>
+            <input type="text" id="editCountName" formControlName="countName" class="form-control"
+              [class.is-invalid]="editForm.get('countName')?.invalid && editForm.get('countName')?.touched">
+            <div class="invalid-feedback">El nombre es requerido</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="editAcquisitionCost" class="form-label">{{ editBalanceLabel }}</label>
+            <input type="number" id="editAcquisitionCost" formControlName="acquisitionCostUsd" class="form-control"
+              [class.is-invalid]="editForm.get('acquisitionCostUsd')?.invalid && editForm.get('acquisitionCostUsd')?.touched"
+              step="0.01" min="0">
+            <div class="invalid-feedback">El saldo es requerido y debe ser mayor a 0</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showEditModal"></div>
