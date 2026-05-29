@@ -21,7 +21,7 @@ export class UpdaterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private assetsService: AssetsService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
     this.assetForm = this.createForm();
   }
