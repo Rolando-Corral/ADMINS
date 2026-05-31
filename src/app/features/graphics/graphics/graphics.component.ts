@@ -5,6 +5,8 @@ import { ChartConfiguration, ChartType } from 'chart.js';
 import { AssetsService } from 'src/app/core/services/assets/assets.service.ts.service';
 import { StockService } from 'src/app/core/services/stockService/stock-service.service';
 import { AssetModelTs } from 'src/app/core/interfaces/asset.model';
+import { PortfolioHistoryService } from 'src/app/core/services/portfolio-history/portfolio-history.service';
+import { PortfolioSnapshot } from 'src/app/core/interfaces/portfolio-snapshot.model';
 
 @Component({
   selector: 'app-graphics',
@@ -33,7 +35,11 @@ export class GraphicsComponent implements OnInit {
   public isUpdatingPrices: boolean = false;
   public isLoading: boolean = false;
 
-  constructor(private assetsService: AssetsService, private stockService: StockService) { }
+  constructor(
+    private assetsService: AssetsService,
+    private stockService: StockService,
+    private historyService: PortfolioHistoryService,
+  ) { }
 
   ngOnInit(): void {
     this.loadChartData();
@@ -115,11 +121,43 @@ export class GraphicsComponent implements OnInit {
             completed++;
             if (completed === posiciones.length) {
               this.isUpdatingPrices = false;
+              this.saveSnapshot(posiciones);
               this.loadChartData();
             }
           }
         });
       }, index * 12000); // 12 segundos de delay entre cada consulta
+    });
+  }
+
+  private saveSnapshot(posiciones: AssetModelTs[]): void {
+    const snapshot: PortfolioSnapshot = {
+      id: this.generateUUID(),
+      createdAt: new Date().toISOString(),
+      assets: posiciones
+        .filter(p => p.currentValueUsd != null)
+        .map(p => ({
+          assetId: p.id,
+          countName: p.countName,
+          shares: p.shares || 1,
+          marketValueUsd: p.currentValueUsd!,
+          positionValueUsd: (p.currentValueUsd || 0) * (p.shares || 1),
+        })),
+    };
+
+    if (snapshot.assets.length === 0) return;
+
+    this.historyService.create(snapshot).subscribe({
+      next: () => console.log('Snapshot guardado:', snapshot.createdAt),
+      error: (err) => console.error('Error guardando snapshot:', err),
+    });
+  }
+
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
     });
   }
 }
