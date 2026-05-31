@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { UpdaterComponent } from '../updater/updater/updater.component';
 import { SharesTableComponent } from '../shares-table/shares-table.component';
 import { PiechartsComponent } from '../graphics/piecharts/piecharts.component';
+import { PortfolioHistoryComponent } from '../graphics/portfolio-history/portfolio-history.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
       {
         path: 'piecharts',
         component: PiechartsComponent
+      },
+      {
+        path: 'portfolio-history',
+        component: PortfolioHistoryComponent
       },
       {
         path: '**',
