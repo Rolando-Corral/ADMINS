@@ -143,7 +143,7 @@ export class PortfolioHistoryComponent implements OnInit {
     const assetNames = new Set<string>();
     sorted.forEach((s) => s.assets.forEach((a) => assetNames.add(a.countName)));
     this.allAssetNames = Array.from(assetNames).sort();
-    this.visibleAssets = new Set(this.allAssetNames);
+    this.visibleAssets = new Set<string>();
 
     this.assetSeries = this.allAssetNames.map((name) => {
       const data: (number | null)[] = sorted.map((snap) => {
