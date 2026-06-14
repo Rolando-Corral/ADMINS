@@ -13,7 +13,6 @@ import { NotificationService } from 'src/app/core/services/notification/notifica
 })
 export class DashboardComponent implements OnInit {
 
-
   public valores: number[] = [];
   public fechaActualizacion: string = '';
   public remuneratedAccounts: AssetModelTs[] = [];
@@ -136,6 +135,19 @@ export class DashboardComponent implements OnInit {
       'Editar cuenta remunerada',
       'Saldo (ARS)',
     );
+  }
+
+  deleteAsset(arg0: string) {
+     this.assetsService.deleteAsset(arg0).subscribe({
+       next: () => {
+         console.log('Asset eliminado:', arg0);
+         this.notificationService.success('Asset eliminado correctamente');
+       },
+       error: (err) => {
+         console.error('Error eliminando asset:', err);
+         this.notificationService.error('Ha ocurrido un error al eliminar el asset');
+       }
+     })
   }
 
   editFixedTermAccount(id: string): void {
